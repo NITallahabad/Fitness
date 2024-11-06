@@ -109,7 +109,7 @@ const Homebanner2 = () => {
                 >
                   <div className='swiper-slide-content'>
                     <h2>{item.type}</h2>
-                    <p>{item.durationInMin} min</p>
+                    <p>{item.durationInMin} mins</p>
                   </div>
                 </div>
               </SwiperSlide>
