@@ -13,26 +13,26 @@ function createResponse(ok, message, data) {
     };
 }
 
-router.post('/addsleepentry', authTokenHandler, async (req, res) => {
-    const { date, durationInHrs } = req.body;
+router.post('/addstepentry', authTokenHandler, async (req, res) => {
+    const { date, steps } = req.body;
 
-    if (!date || !duration) {
-        return res.status(400).json(createResponse(false, 'Please provide date and sleep duration'));
+    if (!date || !steps) {
+        return res.status(400).json(createResponse(false, 'Please provide date and steps count'));
     }
 
     const userId = req.userId;
     const user = await User.findById({ _id: userId });
 
-    user.sleep.push({
-        date : new Date(date),
-        durationInHrs,
+    user.steps.push({
+        date: new Date(date),
+        steps,
     });
 
     await user.save();
-    res.json(createResponse(true, 'Sleep entry added successfully'));
+    res.json(createResponse(true, 'Steps entry added successfully'));
 });
 
-router.post('/getsleepbydate', authTokenHandler, async (req, res) => {
+router.post('/getstepsbydate', authTokenHandler, async (req, res) => {
     const { date } = req.body;
     const userId = req.userId;
 
@@ -40,18 +40,18 @@ router.post('/getsleepbydate', authTokenHandler, async (req, res) => {
 
     if (!date) {
         let date = new Date();
-        user.sleep = filterEntriesByDate(user.sleep, date);
+        user.steps = filterEntriesByDate(user.steps, date);
 
-        return res.json(createResponse(true, 'Sleep entries for today', user.sleep));
+        return res.json(createResponse(true, 'Steps entries for today', user.steps));
     }
 
-    user.sleep = filterEntriesByDate(user.sleep, new Date(date));
-    res.json(createResponse(true, 'Sleep entries for the date', user.sleep));
+    user.steps = filterEntriesByDate(user.steps, new Date(date));
+    res.json(createResponse(true, 'Steps entries for the date', user.steps));
 });
 
 
-// has a bug
-router.post('/getsleepbylimit', authTokenHandler, async (req, res) => {
+
+router.post('/getstepsbylimit', authTokenHandler, async (req, res) => {
     const { limit } = req.body;
 
     const userId = req.userId;
@@ -60,23 +60,22 @@ router.post('/getsleepbylimit', authTokenHandler, async (req, res) => {
     if (!limit) {
         return res.status(400).json(createResponse(false, 'Please provide limit'));
     } else if (limit === 'all') {
-        return res.json(createResponse(true, 'All sleep entries', user.sleep));
+        return res.json(createResponse(true, 'All steps entries', user.steps));
     } else {
-
         let date = new Date();
         let currentDate = new Date(date.setDate(date.getDate() - parseInt(limit))).getTime();
 
-   
-        
-        user.sleep = user.sleep.filter((item) => {
+
+
+        user.steps = user.steps.filter((item) => {
             return new Date(item.date).getTime() >= currentDate;
         })
 
-        return res.json(createResponse(true, `Sleep entries for the last ${limit} days`, user.sleep));
+        return res.json(createResponse(true, `Steps entries for the last ${limit} days`, user.steps));
     }
 });
 
-router.delete('/deletesleepentry', authTokenHandler, async (req, res) => {
+router.delete('/deletestepentry', authTokenHandler, async (req, res) => {
     const { date } = req.body;
 
     if (!date) {
@@ -86,21 +85,31 @@ router.delete('/deletesleepentry', authTokenHandler, async (req, res) => {
     const userId = req.userId;
     const user = await User.findById({ _id: userId });
 
-    user.sleep = user.sleep.filter(entry => {
-        return entry.date !== date;
-    });
+    user.steps = user.steps.filter(entry => entry.date !== date);
 
     await user.save();
-    res.json(createResponse(true, 'Sleep entry deleted successfully'));
+    res.json(createResponse(true, 'Steps entry deleted successfully'));
 });
 
-router.get('/getusersleep', authTokenHandler, async (req, res) => {
+
+
+router.get('/getusergoalsteps', authTokenHandler, async (req, res) => {
     const userId = req.userId;
     const user = await User.findById({ _id: userId });
 
-    const goalSleep = 6;
+    let totalSteps = 0;
 
-    res.json(createResponse(true, 'User max sleep information', {goalSleep }));
+    if(user.goal == "weightLoss"){
+        totalSteps = 10000;
+    }
+    else if(user.goal == "weightGain"){
+        totalSteps = 5000;
+    }
+    else{
+        totalSteps = 7500;
+    }   
+
+    res.json(createResponse(true, 'User steps information', { totalSteps }));
 });
 
 router.use(errorHandler);

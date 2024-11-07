@@ -13,26 +13,26 @@ function createResponse(ok, message, data) {
     };
 }
 
-router.post('/addsleepentry', authTokenHandler, async (req, res) => {
-    const { date, durationInHrs } = req.body;
+router.post('/addweightentry', authTokenHandler, async (req, res) => {
+    const { date, weightInKg } = req.body;
 
-    if (!date || !duration) {
-        return res.status(400).json(createResponse(false, 'Please provide date and sleep duration'));
+    if (!date || !weightInKg) {
+        return res.status(400).json(createResponse(false, 'Please provide date and weight'));
     }
 
     const userId = req.userId;
     const user = await User.findById({ _id: userId });
 
-    user.sleep.push({
-        date : new Date(date),
-        durationInHrs,
+    user.weight.push({
+        date: new Date(date),
+        weight : weightInKg,
     });
 
     await user.save();
-    res.json(createResponse(true, 'Sleep entry added successfully'));
+    res.json(createResponse(true, 'Weight entry added successfully'));
 });
 
-router.post('/getsleepbydate', authTokenHandler, async (req, res) => {
+router.post('/getweightbydate', authTokenHandler, async (req, res) => {
     const { date } = req.body;
     const userId = req.userId;
 
@@ -40,18 +40,18 @@ router.post('/getsleepbydate', authTokenHandler, async (req, res) => {
 
     if (!date) {
         let date = new Date();
-        user.sleep = filterEntriesByDate(user.sleep, date);
+        user.weight = filterEntriesByDate(user.weight, date);
 
-        return res.json(createResponse(true, 'Sleep entries for today', user.sleep));
+        return res.json(createResponse(true, 'Weight entries for today', user.weight));
     }
 
-    user.sleep = filterEntriesByDate(user.sleep, new Date(date));
-    res.json(createResponse(true, 'Sleep entries for the date', user.sleep));
+    user.weight = filterEntriesByDate(user.weight, new Date(date));
+    res.json(createResponse(true, 'Weight entries for the date', user.weight));
 });
 
 
 // has a bug
-router.post('/getsleepbylimit', authTokenHandler, async (req, res) => {
+router.post('/getweightbylimit', authTokenHandler, async (req, res) => {
     const { limit } = req.body;
 
     const userId = req.userId;
@@ -60,23 +60,21 @@ router.post('/getsleepbylimit', authTokenHandler, async (req, res) => {
     if (!limit) {
         return res.status(400).json(createResponse(false, 'Please provide limit'));
     } else if (limit === 'all') {
-        return res.json(createResponse(true, 'All sleep entries', user.sleep));
+        return res.json(createResponse(true, 'All weight entries', user.weight));
     } else {
-
         let date = new Date();
         let currentDate = new Date(date.setDate(date.getDate() - parseInt(limit))).getTime();
 
-   
-        
-        user.sleep = user.sleep.filter((item) => {
+ 
+        user.weight = user.weight.filter((item) => {
             return new Date(item.date).getTime() >= currentDate;
         })
 
-        return res.json(createResponse(true, `Sleep entries for the last ${limit} days`, user.sleep));
+        return res.json(createResponse(true, `Weight entries for the last ${limit} days`, user.weight));
     }
 });
 
-router.delete('/deletesleepentry', authTokenHandler, async (req, res) => {
+router.delete('/deleteweightentry', authTokenHandler, async (req, res) => {
     const { date } = req.body;
 
     if (!date) {
@@ -86,21 +84,22 @@ router.delete('/deletesleepentry', authTokenHandler, async (req, res) => {
     const userId = req.userId;
     const user = await User.findById({ _id: userId });
 
-    user.sleep = user.sleep.filter(entry => {
-        return entry.date !== date;
-    });
+    user.weight = user.weight.filter(entry => entry.date !== date);
 
     await user.save();
-    res.json(createResponse(true, 'Sleep entry deleted successfully'));
+    res.json(createResponse(true, 'Weight entry deleted successfully'));
 });
 
-router.get('/getusersleep', authTokenHandler, async (req, res) => {
+
+// has a bug
+router.get('/getusergoalweight', authTokenHandler, async (req, res) => {
     const userId = req.userId;
     const user = await User.findById({ _id: userId });
 
-    const goalSleep = 6;
+    const currentWeight = user.weight.length > 0 ? user.weight[user.weight.length - 1].weight : null;
+    const goalWeight = 22 * ((user.height[user.height.length - 1].height / 100) ** 2);
 
-    res.json(createResponse(true, 'User max sleep information', {goalSleep }));
+    res.json(createResponse(true, 'User goal weight information', { currentWeight, goalWeight }));
 });
 
 router.use(errorHandler);
