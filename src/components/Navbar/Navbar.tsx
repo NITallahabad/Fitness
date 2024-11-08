@@ -18,22 +18,22 @@ const Navbar = () => {
       <Link href='/about'>About</Link>
       <Link href='/profile'><IoIosBody /></Link>
       {
-                isloggedin ?
-                    <button>Logout</button>
-                    :
-                    <button
-                        onClick={() => {
-                            setShowpopup(true)
-                        }}
-                    >Login</button>
+        isloggedin ?
+          <button>Logout</button>
+          :
+          <button
+            onClick={() => {
+              setShowpopup(true)
+            }}
+          >Login</button>
 
 
 
-            }
+      }
 
-           {
-             showpopup && <AuthPopup/>
-           }
+      {
+        showpopup && <AuthPopup />
+      }
 
     </nav>
   )
