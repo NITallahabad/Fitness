@@ -5,13 +5,28 @@ import logo from '@/assets/logo.png'
 import Input from '@mui/joy/Input';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
-const handleLogin=()=>{}
-const handleSignup=()=>{}
-const AuthPopup = () => {
+import { AiFillDelete, AiOutlineClose } from 'react-icons/ai'
+
+interface AuthPopupProps {
+    setShowpopup: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const handleLogin = () => { }
+const handleSignup = () => { }
+
+
+const AuthPopup: React.FC<AuthPopupProps> = ({ setShowpopup }) => {
     const [showSignup, setShowSignup] = React.useState<boolean>(false)
-  return (
-    <div className='popup'>
-            
+    return (
+        <div className='popup'>
+            <button className='close'
+                onClick={() => {
+                    setShowpopup(false)
+                }}
+            >
+                <AiOutlineClose />
+            </button>
+
             {
                 showSignup ? (
                     <div className='authform'>
@@ -27,7 +42,7 @@ const AuthPopup = () => {
                                     placeholder="name"
                                     size="lg"
                                     variant="solid"
-                                    
+
                                 />
                                 <Input
                                     color="warning"
@@ -35,7 +50,7 @@ const AuthPopup = () => {
                                     size="lg"
                                     variant="solid"
 
-                                   
+
                                 />
                                 <Input
                                     color="warning"
@@ -44,12 +59,12 @@ const AuthPopup = () => {
                                     variant="solid"
                                     type='password'
 
-                                    
+
                                 />
 
 
                                 <Input color="warning" size="lg" variant="solid" type="number" placeholder='Weight in kg'
-                                    
+
                                 />
 
                                 <Select
@@ -67,11 +82,11 @@ const AuthPopup = () => {
 
 
                                 <Input color="warning" size="lg" variant="solid" type="number" placeholder='cm'
-            
+
                                 />
 
 
-                
+
 
                                 <button
                                     onClick={(e) => {
@@ -99,7 +114,7 @@ const AuthPopup = () => {
                                     placeholder="email"
                                     size="lg"
                                     variant="solid"
-                                    
+
                                 />
 
                                 <Input
@@ -109,7 +124,7 @@ const AuthPopup = () => {
                                     variant="solid"
                                     type='password'
 
-                                    
+
                                 />
                                 <button
                                     onClick={(e) => {
@@ -127,7 +142,7 @@ const AuthPopup = () => {
                 )
             }
         </div>
-  )
+    )
 }
 
 export default AuthPopup

@@ -1,6 +1,6 @@
 footer{
     background-color: rgb(47, 44, 44);
-    height: 55px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,10 +9,9 @@ footer{
     top: 0;
     z-index: 10;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    font-size: 1.2rem;
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    gap: 30px;
-    margin-top: 20px;
+    font-weight: 200;
+    font-size: 1rem;
+    color: rgb(242, 219, 219);
+    gap: 25px;
+    margin-top: 30px;
 }
