@@ -32,7 +32,7 @@ const Navbar = () => {
       }
 
       {
-        showpopup && <AuthPopup />
+        showpopup && <AuthPopup setShowpopup={setShowpopup} />
       }
 
     </nav>
