@@ -188,3 +188,16 @@ function filterEntriesByDate(entries, targetDate) {
     });
 }
 module.exports = router;
+
+
+/*{
+    "name":"Dhruv Tiwari",
+    "email":"tiwaridhruv4146@gmail.com"
+    "password":"hj123",
+    "dob":"Fri Nov 5 2004 05:40:00 GMT+5:30(Indian Standard Time)",
+    "weightinKg":"80.4",
+    "heightincm":"183",
+    "gender":"male",
+    "goal":"weightLoss",
+    "activityLevel":"noActivity"
+}*/

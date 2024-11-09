@@ -31,46 +31,58 @@ function createResponse(ok, message, data) {
 }
 
 router.post('/register', async (req, res, next) => {
-    console.log(req.body);
-    try {
-        const { name, email, password, weightInKg, heightInCm, gender, dob, goal, activityLevel } = req.body;
-        const existingUser = await User.findOne({ email: email });
+    console.log('Request body:', req.body);  // Log the incoming request body
 
-        if (existingUser) {
-            return res.status(409).json(createResponse(false, 'Email already exists'));
-        }
-        const newUser = new User({
+    try {
+        const {
             name,
-            password,
             email,
-            weight: [
-                {
-                    weight: weightInKg,
-                    unit: "kg",
-                    date: Date.now()
-                }
-            ],
-            height: [
-                {
-                    height: heightInCm,
-                    date: Date.now(),
-                    unit: "cm"
-                }
-            ],
+            password,
             gender,
             dob,
             goal,
-            activityLevel
+            activityLevel,
+            weightInKg,
+            heightInCm
+        } = req.body;
+
+        if (!name || !email || !password || !gender || !goal || !activityLevel || !weightInKg || !heightInCm) {
+            return res.status(400).json({ success: false, message: 'Some fields are missing from the request body' });
+        }
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ success: false, message: 'Email already exists' });
+        }
+
+        // Create a new user object with the required structure
+        const newUser = new User({
+            name,
+            email,
+            password,
+            gender,
+            dob: new Date(dob),  // Ensure dob is in Date format
+            goal,
+            activityLevel,
+            weight: [{ weight: weightInKg, date: new Date() }],  // Array of weight objects
+            height: [{ height: heightInCm, date: new Date() }]   // Array of height objects
         });
-        await newUser.save(); // Await the save operation
 
-        res.status(201).json(createResponse(true, 'User registered successfully'));
+        // Save the new user
+        await newUser.save();
+        res.status(201).json({ success: true, message: 'User registered successfully' });
 
-    }
-    catch (err) {
+    } catch (err) {
+        console.error('Validation error details:', err);  // Log error details for debugging
+
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: 'Validation failed', errors: err.errors });
+        }
         next(err);
     }
 });
+
 router.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
