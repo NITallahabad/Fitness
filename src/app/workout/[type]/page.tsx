@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import './woroutpage.css'
+
 const page = () => {
     const [workout, setWorkout] = React.useState<any>(null)
 
@@ -25,7 +26,6 @@ const page = () => {
                     reps: 10,
                     rest: 60,
                     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
-
                 },
                 {
                     exercise: 'Decline Bench Press',
@@ -34,7 +34,6 @@ const page = () => {
                     reps: 10,
                     rest: 60,
                     description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.'
-
                 }
             ]
         }
@@ -52,14 +51,17 @@ const page = () => {
                 {
                     workout?.exercises.map((item: any, index: number) => {
                         return (
-                            <div className={
-                                index % 2 === 0 ? 'workout__exercise' : 'workout__exercise workout__exercise--reverse'
-                            }>
+                            <div
+                                key={index}  // Add the key prop here
+                                className={
+                                    index % 2 === 0 ? 'workout_exercise' : 'workoutexercise workout_exercise--reverse'
+                                }
+                            >
                                 <h3>{index + 1}</h3>
-                                <div className='workout__exercise__image'>
+                                <div className='workout_exercise_image'>
                                     <img src={item.videoUrl} alt="" />
                                 </div>
-                                <div className='workout__exercise__content'>
+                                <div className='workout_exercise_content'>
                                     <h2>{item.exercise}</h2>
                                     <span>{item.sets} sets X {item.reps} reps</span>
                                     <p>{item.description}</p>
