@@ -82,3 +82,29 @@ overflow: scroll;
     z-index: 1001;
 
 }
+.input-field {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Datepicker container to manage positioning */
+.datepicker-container {
+    position: relative;
+}
+
+/* Date input field style */
+.date-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style for DatePicker calendar pop-up */
+.react-datepicker-popper {
+    z-index: 10; /* Higher z-index to make it appear on top */
+    position: absolute !important;
+    top: 50px; /* Adjusts the dropdown position relative to date input */
+}

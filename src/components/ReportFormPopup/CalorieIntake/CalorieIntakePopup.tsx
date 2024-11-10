@@ -34,19 +34,33 @@ const CalorieIntakePopup: React.FC<CalorieIntakePopupProps> = ({ setShowCalorieI
     <div className="popupout">
       <div className="popupbox">
         <button className="close" onClick={() => setShowCalorieIntakePopup(false)}>
-          Close <AiOutlineClose />
+          <AiOutlineClose />
         </button>
-        <DatePicker
-          selected={date}
-          onChange={handleDateChange}
-          maxDate={new Date()} // Example: sets the maximum selectable date to today
-          dateFormat="MMMM" // Sets the format of the date displayed
-        />
-        <TextField id="outlined-basic" label="Food item name" variant="outlined" color="warning" />
-        <TextField id="outlined-basic" label="Food item amount (in gms)" variant="outlined" color="warning" />
+        <div className="datepicker-container">
+                <DatePicker
+                    selected={date}
+                    onChange={handleDateChange}
+                    maxDate={new Date()}
+                    dateFormat="dd/MM/yyyy"
+                    className="date-input"
+                />
+            </div>
+        <input
+                type="text"
+                placeholder="Food item name"
+                className="input-field"
+            />
+            <input
+                type="text"
+                placeholder="Food item amount (in gms)"
+                className="input-field"
+            />
+
+            {/* DatePicker component */}
+            
         <div className="timebox">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker
+            <TimePicker 
               value={time}
               onChange={handleTimeChange}
               slotProps={{ textField: { fullWidth: true } }}
