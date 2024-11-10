@@ -4,7 +4,7 @@ const User = require('../Models/UserSchema')
 const errorHandler = require('../Middlewares/errorMiddleware');
 const authTokenHandler = require('../Middlewares/checkAuthToken');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
 //tyen gzcy rkna ctpn
@@ -45,6 +45,20 @@ router.post('/register', async (req, res, next) => {
             weightInKg,
             heightInCm
         } = req.body;
+             
+        console.log(req.body)
+        console.log("hello");
+        console.log(name);
+        console.log(email);
+        console.log("ammu dalli");
+
+        if(name != null){
+            console.log("dalli");
+        }
+        else{
+            console.log("chutiya");
+        }
+
 
         if (!name || !email || !password || !gender || !goal || !activityLevel || !weightInKg || !heightInCm) {
             return res.status(400).json({ success: false, message: 'Some fields are missing from the request body' });
@@ -70,6 +84,8 @@ router.post('/register', async (req, res, next) => {
         });
 
         // Save the new user
+        console.log(name);
+        console.log(email);
         await newUser.save();
         res.status(201).json({ success: true, message: 'User registered successfully' });
 
@@ -90,10 +106,10 @@ router.post('/login', async (req, res, next) => {
         if (!user) {
             return res.status(400).json(createResponse(false, 'Invalid credentials'));
         }
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json(createResponse(false, 'Invalid credentials'));
-        }
+        // const isMatch = await bcrypt.compare(password, user.password);
+        // if (!isMatch) {
+        //     return res.status(400).json(createResponse(false, 'Invalid credentials'));
+        // }
 
         const authToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '50m' });
         const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '100m' });
