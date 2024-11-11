@@ -58,7 +58,7 @@ const Page = () => {
                                 scaleType: dataS1.xAxis.scaleType,
                                 label: dataS1.xAxis.label,
                                 valueFormatter: (date: Date) => {
-                                    return date.toLocaleDateString(); // Convert the date to a string format
+                                    return date.toLocaleDateString();
                                 },
                             }]}
                             series={[{
@@ -79,18 +79,9 @@ const Page = () => {
                 <AiFillEdit />
             </button>
 
-<<<<<<< HEAD
-            {
-               // showCalorieIntakePopup &&
-
-               //Build failed because of webpack errors <CaloriIntakePopup setShowCalorieIntakePopup={setShowCalorieIntakePopup} />
-
-}
-=======
             {showCalorieIntakePopup && (
                 <CaloriIntakePopup setShowCalorieIntakePopup={setShowCalorieIntakePopup} />
             )}
->>>>>>> 931dcb5a695fd1dd7dee2af821c957f825a7dad1
         </div>
     );
 };
