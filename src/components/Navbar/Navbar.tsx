@@ -49,7 +49,7 @@ React.useEffect(() => {
             onClick={() => {
               setShowpopup(true)
             }}
-          >Login</button>
+          >Logout</button>
 
 
 
