@@ -24,7 +24,7 @@ const Navbar = () => {
             onClick={() => {
               setShowpopup(true)
             }}
-          >Login</button>
+          >Logout</button>
 
 
 
