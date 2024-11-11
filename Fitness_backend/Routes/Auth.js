@@ -102,14 +102,12 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
+         
         const user = await User.findOne({ email });
-        if (!user) {
+        if (!user || user.password !== password) { // Direct comparison of plain-text password
             return res.status(400).json(createResponse(false, 'Invalid credentials'));
         }
-        // const isMatch = await bcrypt.compare(password, user.password);
-        // if (!isMatch) {
-        //     return res.status(400).json(createResponse(false, 'Invalid credentials'));
-        // }
+
 
         const authToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, { expiresIn: '50m' });
         const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '100m' });

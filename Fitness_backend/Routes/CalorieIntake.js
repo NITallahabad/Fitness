@@ -26,66 +26,69 @@ router.post('/addcalorieintake', authTokenHandler, async (req, res) => {
     if (!item || !date || !quantity || !quantitytype) {
         return res.status(400).json(createResponse(false, 'Please provide all the details'));
     }
-    let qtyingrams = 0;
-    if (quantitytype === 'g') {
-        qtyingrams = quantity;
-    }
-    else if (quantitytype === 'kg') {
-        qtyingrams = quantity * 1000;
-    }
-    else if (quantitytype === 'ml') {
-        qtyingrams = quantity;
-    }
-    else if (quantitytype === 'l') {
-        qtyingrams = quantity * 1000;
-    }
-    else {
-        return res.status(400).json(createResponse(false, 'Invalid quantity type'));
+    
+    let qtyInGrams = 0;
+    const parsedQuantity = parseFloat(quantity);
+    if (isNaN(parsedQuantity)) {
+        return res.status(400).json(createResponse(false, 'Invalid quantity provided'));
     }
 
-    var query = item;
+    // Convert quantity based on quantity type
+    switch (quantitytype) {
+        case 'g': qtyInGrams = parsedQuantity; break;
+        case 'kg': qtyInGrams = parsedQuantity * 1000; break;
+        case 'ml': qtyInGrams = parsedQuantity; break;
+        case 'l': qtyInGrams = parsedQuantity * 1000; break;
+        default: 
+            return res.status(400).json(createResponse(false, 'Invalid quantity type'));
+    }
+
     request.get({
-        url: 'https://api.api-ninjas.com/v1/nutrition?query=' + query,
+        url: `https://api.api-ninjas.com/v1/nutrition?query=${encodeURIComponent(item)}`,
         headers: {
             'X-Api-Key': process.env.NUTRITION_API_KEY,
         },
-    }, async function (error, response, body) {
-        if (error) return console.error('Request failed:', error);
-        else if (response.statusCode != 200) return console.error('Error:', response.statusCode, body.toString('utf8'));
-        else {
-            // body :[ {
-            //     "name": "rice",
-            //     "calories": 127.4,
-            //     "serving_size_g": 100,
-            //     "fat_total_g": 0.3,
-            //     "fat_saturated_g": 0.1,
-            //     "protein_g": 2.7,
-            //     "sodium_mg": 1,
-            //     "potassium_mg": 42,
-            //     "cholesterol_mg": 0,
-            //     "carbohydrates_total_g": 28.4,
-            //     "fiber_g": 0.4,
-            //     "sugar_g": 0.1
-            // }]
+    }, async (error, response, body) => {
+        if (error) {
+            console.error('Request failed:', error);
+            return res.status(500).json(createResponse(false, 'Failed to fetch nutrition data'));
+        } 
+        if (response.statusCode !== 200) {
+            console.error('Error:', response.statusCode, body.toString('utf8'));
+            return res.status(response.statusCode).json(createResponse(false, 'Error fetching nutrition data'));
+        }
 
-            body = JSON.parse(body);
-            let calorieIntake = (body[0].calories / body[0].serving_size_g) * parseInt(qtyingrams);
-            const userId = req.userId;
+        // Log the raw response body for debugging
+        console.log('Raw nutrition data response:', body);
+
+        const nutritionData = JSON.parse(body);
+        const nutritionInfo = nutritionData[0];
+
+        // Check if the response array is empty or missing necessary fields
+        if (!nutritionInfo || isNaN(nutritionInfo.calories) || isNaN(nutritionInfo.serving_size_g)) {
+            return res.status(500).json(createResponse(false, 'Nutrition data unavailable or incomplete for this item'));
+        }
+
+        const calorieIntake = (nutritionInfo.calories / nutritionInfo.serving_size_g) * qtyInGrams;
+        const userId = req.userId;
+
+        try {
             const user = await User.findOne({ _id: userId });
             user.calorieIntake.push({
                 item,
                 date: new Date(date),
-                quantity,
+                quantity: parsedQuantity,
                 quantitytype,
-                calorieIntake: parseInt(calorieIntake)
-            })
-
+                calorieIntake: Math.round(calorieIntake),
+            });
             await user.save();
             res.json(createResponse(true, 'Calorie intake added successfully'));
+        } catch (err) {
+            console.error('Error saving user data:', err);
+            res.status(500).json(createResponse(false, 'Failed to add calorie intake'));
         }
     });
-
-})
+});
 router.post('/getcalorieintakebydate', authTokenHandler, async (req, res) => {
     const { date } = req.body;
     const userId = req.userId;
