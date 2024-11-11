@@ -208,11 +208,11 @@ const page = () => {
             </button>
 
             {
-                showCalorieIntakePopup &&
+               // showCalorieIntakePopup &&
 
-                <CaloriIntakePopup setShowCalorieIntakePopup={setShowCalorieIntakePopup} />
+               //Build failed because of webpack errors <CaloriIntakePopup setShowCalorieIntakePopup={setShowCalorieIntakePopup} />
 
-            }
+}
         </div>
     )
 }
