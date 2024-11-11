@@ -6,7 +6,6 @@ import './Navbar.css'
 import Image from 'next/image'
 import Link from 'next/link'
 import AuthPopup from '../AuthPopup/AuthPopup'
-
 const Navbar = () => {
   const [isloggedin, setIsloggedin] = React.useState<boolean>(false)
 
@@ -34,8 +33,9 @@ const Navbar = () => {
       {
         showpopup && <AuthPopup setShowpopup={setShowpopup} />
       }
-
+      
     </nav>
+    
   )
 }
 
