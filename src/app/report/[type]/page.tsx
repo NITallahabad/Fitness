@@ -58,7 +58,7 @@ const Page = () => {
                                 scaleType: dataS1.xAxis.scaleType,
                                 label: dataS1.xAxis.label,
                                 valueFormatter: (date: Date) => {
-                                    return date.toLocaleDateString(); // Convert the date to a string format
+                                    return date.toLocaleDateString();
                                 },
                             }]}
                             series={[{

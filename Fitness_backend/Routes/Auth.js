@@ -129,7 +129,7 @@ router.post('/sendotp', async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000);
 
         const mailOptions = {
-            from: 'tiwaridhruv4146@gmail.com', 
+            from: 'triptorewa@gmail.com', 
             to: email,
             subject: 'OTP for verification',
             text: `Your OTP is ${otp}`
