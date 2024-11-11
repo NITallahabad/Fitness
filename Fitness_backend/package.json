@@ -1,31 +1,4 @@
 {
-<<<<<<< HEAD
-    "name": "fitnessfreak_backend",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "bcrypt": "^5.1.0",
-        "body-parser": "^1.20.2",
-        "cloudinary": "^1.40.0",
-        "cookie-parser": "^1.4.6",
-        "cors": "^2.8.5",
-        "dotenv": "^16.3.1",
-        "express": "^4.18.2",
-        "jsonwebtoken": "^9.0.2",
-        "mongoose": "^7.5.1",
-        "multer": "^1.4.5-lts.1",
-        "nodemailer": "^6.9.5",
-        "nodemon": "^3.0.1",
-        "request": "^2.88.2",
-        "sharp": "^0.32.6"
-    }
-=======
   "name": "fitnessfreak_backend",
   "version": "1.0.0",
   "description": "Backend API for Fitness Freak application",
@@ -38,6 +11,7 @@
   "author": "Your Name",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cloudinary": "^1.40.0",
     "cookie-parser": "^1.4.6",
@@ -62,5 +36,4 @@
     "express",
     "mongoose"
   ]
->>>>>>> 931dcb5a695fd1dd7dee2af821c957f825a7dad1
 }
